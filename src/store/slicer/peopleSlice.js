@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { LOAD_STATE } from "../../constants";
 
 export const fetchPeople = createAsyncThunk(
   "people/fetchPeople",
@@ -14,7 +15,7 @@ export const peopleSlice = createSlice({
   initialState: {
     people: [],
     search: "",
-    status: 'idle',
+    status: LOAD_STATE.LOADING,
     error: null,
   },
   reducers: {
@@ -25,14 +26,14 @@ export const peopleSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchPeople.pending, (state) => {
-        state.status = 'loading';
+        state.status = LOAD_STATE.LOADING;
       })
       .addCase(fetchPeople.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = LOAD_STATE.SUCCESS;
         state.people = action.payload;
       })
       .addCase(fetchPeople.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = LOAD_STATE.REJECT;
         state.error = action.error.message;
       });
   },

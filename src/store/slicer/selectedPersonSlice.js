@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { LOAD_STATE } from "../../constants";
 
 const fetchVehicles = async (selectedPerson) => {
     const vehiclePromises = selectedPerson.vehicles.map(vehicleUrl => fetch(vehicleUrl));
@@ -45,24 +46,24 @@ export const selectedPersonSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchVehiclesAsync.pending, (state) => {
-                 state.status = 'loading';
+                 state.status = LOAD_STATE.LOADING;
              })
              .addCase(fetchStarshipsAsync.pending, (state) => {
-                 state.status = 'loading';
+                 state.status = LOAD_STATE.LOADING;
              })
             .addCase(fetchVehiclesAsync.fulfilled, (state, action) => {
                 state.vehicles = action.payload;
-                state.status = 'succeeded';
+                state.status = LOAD_STATE.SUCCESS;
             })
             .addCase(fetchStarshipsAsync.fulfilled, (state, action) => {
                 state.starships = action.payload;
-                state.status = 'succeeded';
+                state.status = LOAD_STATE.SUCCESS;
             })
              .addCase(fetchVehiclesAsync.rejected, (state) => {
-                state.status = 'failed';
+                state.status = LOAD_STATE.REJECT;
             })
             .addCase(fetchStarshipsAsync.rejected, (state) => {
-                state.status = 'failed';
+                state.status = LOAD_STATE.REJECT;
             })
     },
 });

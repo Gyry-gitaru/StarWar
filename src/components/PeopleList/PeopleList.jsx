@@ -5,6 +5,9 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Box, Card, CardContent } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
+import { LOAD_STATE } from "../../constants";
+
+import { boxStyles, containerStyles,} from "./style";
 
 import { useSearchPeople } from "../../hooks/useSearchPeople";
 
@@ -17,8 +20,7 @@ import {
 import TransportList from "../TransportsList/TransportsList";
 
 const PeopleList = () => {
-  const { PeopleCards, loading, search, handleSearchChange } =
-    useSearchPeople();
+  const { PeopleCards, status, search, handleSearchChange } = useSearchPeople();
 
   const [selectedPerson, setSelectedPerson] = useState(null);
 
@@ -36,34 +38,18 @@ const PeopleList = () => {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "20px",
-        padding: "10px",
-        alignItems: "center",
-      }}
-    >
+    <Box style={boxStyles}>
       <TextField
         label="Search for a hero"
         variant="outlined"
         value={search}
         onChange={handleSearchChange}
       />
-      {loading === "loading" ? (
-        <CircularProgress />
-      ) : (
-        <Box
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "30px",
-            justifyContent: "center",
-          }}
-        >
-          {PeopleCards.map((person, index) => (
-            <Card key={index} variant="outlined">
+      {status === LOAD_STATE.LOADING && <CircularProgress />}
+      {status === LOAD_STATE.SUCCESS && (
+        <Box style={containerStyles}>
+          {PeopleCards.map((person) => (
+            <Card key={person.name} variant="outlined">
               <CardContent>
                 <h3>{person.name}</h3>
                 <p>Height: {person.height}</p>
@@ -82,6 +68,7 @@ const PeopleList = () => {
           ))}
         </Box>
       )}
+      {status === LOAD_STATE.REJECT && <p>Oops, something happened</p>}
       {selectedPerson && (
         <TransportList
           person={selectedPerson}

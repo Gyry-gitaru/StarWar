@@ -4,7 +4,11 @@ import { fetchPeople, setSearch } from "../store/slicer/peopleSlice";
 
 export const useSearchPeople = () => {
   const dispatch = useDispatch();
-  const { people, search, status: loading } = useSelector((state) => state.people);
+  const {
+    people,
+    search,
+    status
+  } = useSelector((state) => state.people);
 
   useEffect(() => {
     dispatch(fetchPeople(search));
@@ -26,10 +30,8 @@ export const useSearchPeople = () => {
 
   return {
     PeopleCards,
-    loading,
+    status,
     search,
     handleSearchChange
   }
 };
-
-
